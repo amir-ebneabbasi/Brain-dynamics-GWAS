@@ -113,8 +113,8 @@ run_mr <- function(exp_name,
     exposure_name = exp_name,
     outcome_data  = out_full,
     outcome_name  = out_name,
-    ld            = "/rds/user/ae516/rds-genetics_hpc-Nl99R8pHODQ/ldsc/eur_w_ld_chr",
-    hm3           = "/rds/user/ae516/rds-genetics_hpc-Nl99R8pHODQ/ldsc/eur_w_ld_chr/w_hm3.snplist",
+    ld            = "path/to/ldsc/eur_w_ld_chr",
+    hm3           = "path/to/ldsc/eur_w_ld_chr/w_hm3.snplist",
     save_logfiles = FALSE,
     verbose       = TRUE
   )
