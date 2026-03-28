@@ -24,4 +24,4 @@ snpgdsBED2GDS(
   fam.fn = fam.fn,
   out.gdsfn = out.gdsfn
 )
-cat("✅ Conversion complete: genotype_autosomes.gds created successfully.\n")
+cat("Conversion complete: genotype_autosomes.gds created successfully.\n")
