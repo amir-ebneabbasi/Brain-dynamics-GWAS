@@ -1,4 +1,4 @@
-## 🛠 Scripts in this repository
+## 🛠 GWAS of HMM-derived brain dynamics, with downstream post-GWAS analyses
 
 | Script | Description |
 |--------|-------------|
