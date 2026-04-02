@@ -1,4 +1,4 @@
-## 🛠 GWAS of HMM-derived brain dynamics, with downstream analyses
+## 🛠 GWAS of HMM-derived brain dynamics and downstream analyses
 
 | Script | Description |
 |--------|-------------|
