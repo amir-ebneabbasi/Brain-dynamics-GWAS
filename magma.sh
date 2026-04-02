@@ -10,9 +10,9 @@ file="${gwas_dir}/GWAS_${SLURM_ARRAY_TASK_ID}.txt.fastGWA"
 
 echo "Running MAGMA for $trait using file $file"
 
+# prepare files
 loc_file="${out_dir}/${trait}_loc.txt"
 pval_file="${out_dir}/${trait}_pvalue.txt"
-
 awk 'NR > 1 {print $2 "\t" $1 "\t" $3}' "$file" > "$loc_file"
 
 # Annotate genes
@@ -20,17 +20,15 @@ awk 'NR > 1 {print $2 "\t" $1 "\t" $3}' "$file" > "$loc_file"
     --snp-loc "$loc_file" \
     --gene-loc "$out_dir/NCBI37.3.gene.loc.extendedMHCexcluded" \
     --out "$out_dir/annot_${trait}"
-
 rm "$loc_file"
 
-awk 'NR > 1 {print $2 "\t" $10}' "$file" > "$pval_file"
-
 # Gene analysis
+awk 'NR > 1 {print $2 "\t" $10}' "$file" > "$pval_file"
+N=$(awk 'NR==2 {print $6}' "$file")
 "$soft_dir"/magma --bfile "$soft_dir/g1000_eur" \
-    --pval "$pval_file" N=52000 \
+    --pval "$pval_file" N=$N \
     --gene-annot "$out_dir/annot_${trait}.genes.annot" \
     --out "$out_dir/gene_${trait}"
-
 rm "$pval_file"
 
 # Gene set enrichment
