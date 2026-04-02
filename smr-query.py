@@ -1,69 +1,75 @@
-#!/usr/bin/env python3
+#!/usr/bin/env Rscript
 
-import csv
-import subprocess
-from pathlib import Path
+library(readr)
 
-base = "path/to/base"
-clumped_csv = "path/to/all_clumped.csv"
-SMR_Tool = "path/to/smr"
-
-eqtl_loc = f"{base}/smr/eqtl/BrainMeta_cis_eqtl_summary"
-sqtl_loc = f"{base}/smr/sqtl/BrainMeta_cis_sqtl_summary"
-mqtl_loc = f"{base}/smr/mqtl/Brain-mMeta/Brain-mMeta"
-caqtl_loc = f"{base}/smr/caqtl/Bryois_caQTL_summary/bryois_NatCommun_2018_50kb_cQTLs"
-
-out_dir = Path(f"{base}/smr/query_results")
-out_dir.mkdir(parents=True, exist_ok=True)
-
-
-def run_smr(qtl_file: Path, qtl_name: str, snp: str, gwas_id: str):
-    besd_path = Path(str(qtl_file) + ".besd")
-
-    if besd_path.exists():
-        print(f"Running SMR on {qtl_name}: {qtl_file}")
-        out_path = out_dir / f"GWAS_{gwas_id}_{snp}_{qtl_name}"
-
-        cmd = [
-            SMR_Tool,
-            "--beqtl-summary", str(qtl_file),
-            "--query", "5.0e-8",
-            "--snp", snp,
-            "--out", str(out_path)
-        ]
-
-        result = subprocess.run(cmd, capture_output=True, text=True)
-
-        if result.returncode == 0:
-            print(f"{qtl_name} run successfully for SNP {snp}")
-        else:
-            print(f"{qtl_name} failed for SNP {snp}")
-            if result.stdout.strip():
-                print(result.stdout.strip())
-            if result.stderr.strip():
-                print(result.stderr.strip())
-    else:
-        print(f"Missing {qtl_name} file: {qtl_file} (skipped)")
+run_smr <- function(smr_tool, qtl_file, qtl_name,
+                    snp, gwas_id,
+                    out_dir) {
+  
+  besd_path <- paste0(qtl_file, ".besd")
+  
+  if (file.exists(besd_path)) {
+    cat(sprintf("Running SMR on %s: %s\n", qtl_name, qtl_file))
+    
+    out_path <- file.path(out_dir, paste0("GWAS_", gwas_id, "_", snp, "_", qtl_name))
+    
+    cmd <- c(
+      "--beqtl-summary", qtl_file,
+      "--query", "5.0e-8",
+      "--snp", snp,
+      "--out", out_path
+    )
+    
+    result <- system2(smr_tool, args = cmd, stdout = TRUE, stderr = TRUE)
+    exit_status <- attr(result, "status")
+    
+    if (is.null(exit_status) || exit_status == 0) {
+      cat(sprintf("%s run successfully for SNP %s\n", qtl_name, snp))
+    } else {
+      cat(sprintf("%s failed for SNP %s\n", qtl_name, snp))
+      if (length(result) > 0) {
+        cat(paste(result, collapse = "\n"), "\n")
+      }
+    }
+    
+  } else {
+    cat(sprintf("Missing %s file: %s (skipped)\n", qtl_name, qtl_file))
+  }
+}
 
 
-# run function
-with open(clumped_csv, newline='') as f:
-    reader = csv.DictReader(f)
-    for row in reader:
-        chr_ = row["CHR"]
-        snp = row["SNP"]
-        gwas_id = row["GWAS_id"].strip()
+# # how to run
 
-        print("==========================================================")
-        print(f"Processing SNP: {snp} (chr{chr_}) for GWAS: {gwas_id}")
-        print("==========================================================")
+# base <- "path/to/base"
+# clumped_csv <- "path/to/all_clumped.csv"
+# smr_tool <- "path/to/smr"
+# eqtl_loc <- file.path(base, "smr/eqtl/BrainMeta_cis_eqtl_summary")
+# sqtl_loc <- file.path(base, "smr/sqtl/BrainMeta_cis_sqtl_summary")
+# mqtl_loc <- file.path(base, "smr/mqtl/Brain-mMeta/Brain-mMeta")
+# caqtl_loc <- file.path(base, "smr/caqtl/Bryois_caQTL_summary/bryois_NatCommun_2018_50kb_cQTLs")
+# out_dir <- file.path(base, "smr/query_results")
+# dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
-        eqtl_file = Path(f"{eqtl_loc}/BrainMeta_cis_eQTL_chr{chr_}")
-        sqtl_file = Path(f"{sqtl_loc}/BrainMeta_cis_sQTL_chr{chr_}")
-        mqtl_file = Path(mqtl_loc)
-        caqtl_file = Path(caqtl_loc)
+# df <- read_csv(clumped_csv, show_col_types = FALSE)
 
-        run_smr(eqtl_file, "eQTL", snp, gwas_id)
-        run_smr(sqtl_file, "sQTL", snp, gwas_id)
-        run_smr(mqtl_file, "mQTL", snp, gwas_id)
-        run_smr(caqtl_file, "caQTL", snp, gwas_id)
+# for (i in seq_len(nrow(df))) {
+#   row <- df[i, ]
+  
+#   chr_ <- row$CHR
+#   snp <- row$SNP
+#   gwas_id <- trimws(row$GWAS_id)
+  
+#   cat("==========================================================\n")
+#   cat(sprintf("Processing SNP: %s (chr%s) for GWAS: %s\n", snp, chr_, gwas_id))
+#   cat("==========================================================\n")
+  
+#   eqtl_file <- file.path(eqtl_loc, paste0("BrainMeta_cis_eQTL_chr", chr_))
+#   sqtl_file <- file.path(sqtl_loc, paste0("BrainMeta_cis_sQTL_chr", chr_))
+#   mqtl_file <- mqtl_loc
+#   caqtl_file <- caqtl_loc
+  
+#   run_smr(eqtl_file, "eQTL", snp, gwas_id, smr_tool, out_dir)
+#   run_smr(sqtl_file, "sQTL", snp, gwas_id, smr_tool, out_dir)
+#   run_smr(mqtl_file, "mQTL", snp, gwas_id, smr_tool, out_dir)
+#   run_smr(caqtl_file, "caQTL", snp, gwas_id, smr_tool, out_dir)
+# }
