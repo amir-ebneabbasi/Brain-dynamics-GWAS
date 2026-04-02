@@ -34,9 +34,6 @@ run_hyprcoloc_pipeline <- function(input_dir, out_dir, p_threshold = 5e-8) {
   all_sig_snps <- data.frame()
   files <- list.files(input_dir, pattern = "\\.fastGWA$", full.names = TRUE)
   
-  trait_names <- tools::file_path_sans_ext(basename(files))
-  trait_names <- gsub("\\.fastGWA$", "", trait_names)
-  
   for (filepath in files) {
     filename <- basename(filepath)
     message("Processing ", filename)
