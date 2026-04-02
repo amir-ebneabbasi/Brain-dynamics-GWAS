@@ -29,8 +29,21 @@ run_mr <- function(exp_name,
   cat("Reading full outcome data", "\n")
   out_full <- fread(out_file)
 
-  stopifnot(all(c("SNP","CHR","POS","BETA","SE","A1","A2","N","P") %in% colnames(exp_full)))
-  stopifnot(all(c("SNP","CHR","POS","BETA","SE","A1","A2","N","P") %in% colnames(out_full)))
+  required_cols <- c("SNP","CHR","POS","BETA","SE","A1","A2","N","P")
+
+  missing_exp <- setdiff(required_cols, colnames(exp_full))
+  missing_out <- setdiff(required_cols, colnames(out_full))
+
+  if (length(missing_exp) > 0) {
+    cat("Missing in exp_full:", paste(missing_exp, collapse = ", "), "\n")
+  }
+
+  if (length(missing_out) > 0) {
+    cat("Missing in out_full:", paste(missing_out, collapse = ", "), "\n")
+  }
+
+  stopifnot(length(missing_exp) == 0)
+  stopifnot(length(missing_out) == 0)
 
   # =============================
   # 3. Read exposure and outcome for MR
