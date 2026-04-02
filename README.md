@@ -15,7 +15,7 @@
 | **magma.sh** | Runs MAGMA for positional gene mapping. |
 | **h-magma.sh** | Runs H-MAGMA for chromatin-informed gene mapping. |
 | **combo.sh** | Runs gene mapping considering masking effects. |
-| **smr-query.R** | xQTL Queries for gene mapping. |
+| **smr-query.R** | xQTL queries for gene mapping. |
 | **smr.sh** | Runs SMR (Summary-based Mendelian Randomisation) for gene mapping. |
 | **polyfun1.sh** | First step in functionally informed fine-mapping. |
 | **polyfun2.sh** | Second step in functionally informed fine-mapping. |
