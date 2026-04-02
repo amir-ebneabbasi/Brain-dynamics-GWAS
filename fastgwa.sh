@@ -15,7 +15,7 @@ if [ "$SLURM_ARRAY_TASK_ID" -eq 0 ]; then
     OUTFILE="${OUTPUT_DIR}/GWAS_0.txt"
     $GCTA --fastGWA-mlm \
         --grm-sparse "$GRM_MATRIX" \
-	--mbfile "$MBFILE" \
+	    --mbfile "$MBFILE" \
         --pheno "$PHENO_FILE" \
         --covar "$COVAR" \
         --qcovar "$QCOVAR" \
@@ -26,7 +26,7 @@ else
     OUTFILE="${OUTPUT_DIR}/GWAS_${SLURM_ARRAY_TASK_ID}.txt"
     $GCTA --fastGWA-mlm \
         --grm-sparse "$GRM_MATRIX" \
-	--mbfile "$MBFILE" \
+	    --mbfile "$MBFILE" \
         --pheno "$PHENO_FILE" \
         --mpheno "$MPHENO" \
         --covar "$COVAR" \
