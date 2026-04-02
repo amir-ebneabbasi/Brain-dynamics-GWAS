@@ -60,7 +60,8 @@ cat("PC-Relate saved to:", mypcrelate_file, "\n")
 # Create Sparse GRM
 cat("\nCreating sparse GRM...\n")
 mypcrelate_sparse <- pcrelateToMatrix(
-  mypcrelate
+  mypcrelate,
+  thresh = 2^(-11/2)
 )
 
 # Save Results
