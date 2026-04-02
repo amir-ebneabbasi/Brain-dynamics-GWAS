@@ -17,6 +17,7 @@
 | **combo.sh** | Runs gene mapping considering masking effects. |
 | **smr-query.R** | xQTL queries for gene mapping. |
 | **smr.sh** | Runs SMR (Summary-based Mendelian Randomisation) for gene mapping. |
+| **gwas_catalog | Links reported GWAS traits to the respective gene. |
 | **polyfun1.sh** | First step in functionally informed fine-mapping. |
 | **polyfun2.sh** | Second step in functionally informed fine-mapping. |
 | **polyfun3.sh** | Third step in functionally informed fine-mapping. |
